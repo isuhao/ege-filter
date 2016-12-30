@@ -5,6 +5,9 @@
     <ClCompile Include="filterCore.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="utilityWin32.cpp">
+      <Filter>utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -12,6 +15,9 @@
     </Filter>
     <Filter Include="thread">
       <UniqueIdentifier>{2b33dff7-9ddf-49fe-8a79-aaa1d32bbb93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utility">
+      <UniqueIdentifier>{f61690e6-4ab4-4a0f-adce-afd3d6c75965}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -22,6 +28,12 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="filterContrast.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="utilityWin32.h">
+      <Filter>utility</Filter>
+    </ClInclude>
+    <ClInclude Include="filterSaturation.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>

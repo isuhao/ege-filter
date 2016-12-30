@@ -18,13 +18,13 @@ public:
 
 	static inline void run(void* dataOut, const void* dataIn, int width, int height, int stride, float intensity)
 	{
-		int plusValue = intensity * 255;
+		int plusValue = intensity * 128;
 		_FILTER_RUN(dataOut, dataIn, w, h, stride, _FILTER_CODE(
 		{
-			out[Channel_R] = MIN(in[Channel_R] + plusValue, 255);
-			out[Channel_G] = MIN(in[Channel_G] + plusValue, 255);
-			out[Channel_B] = MIN(in[Channel_B] + plusValue, 255);
-//			out[Channel_A] = MIN(in[Channel_A] + plusValue, 255);
+			out[Channel_R] = CLAMP(in[Channel_R] + plusValue, 0, 255);
+			out[Channel_G] = CLAMP(in[Channel_G] + plusValue, 0, 255);
+			out[Channel_B] = CLAMP(in[Channel_B] + plusValue, 0, 255);
+//			out[Channel_A] = in[Channel_A];
 		}));
 	}
 };

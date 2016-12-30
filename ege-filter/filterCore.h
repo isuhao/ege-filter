@@ -64,7 +64,7 @@ protected:
 
 #define _FILTER_CODE(...) __VA_ARGS__
 
-//适合用于处理无领域采样的情况。 参数如下
+//适合用于处理无邻域采样的情况。 参数如下
 //void* dataOut, const void* dataIn, int w, int h, int stride
 #define _FILTER_RUN(dataOut, dataIn, w, h, stride, code) \
 const unsigned char* dtIn = (const unsigned char*)dataIn; \
@@ -103,7 +103,11 @@ static inline T MAX(T a, T b)
 template <typename T>
 static inline T CLAMP(T a, T b, T c)
 {
-	return MAX(b, MIN(a, c));
+	if (a < b)
+		return b;
+	if (a > c)
+		return c;
+	return a;
 }
 #endif
 

@@ -99,7 +99,7 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level1</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
@@ -148,11 +148,14 @@
   <ItemGroup>
     <ClCompile Include="filterCore.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="utilityWin32.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="filterBrightness.h" />
     <ClInclude Include="filterContrast.h" />
     <ClInclude Include="filterCore.h" />
+    <ClInclude Include="filterSaturation.h" />
+    <ClInclude Include="utilityWin32.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
