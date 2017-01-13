@@ -7,6 +7,7 @@
 */
 
 #ifndef _FILTER_CONTRAST_H_
+#define _FILTER_CONTRAST_H_
 
 #include "filterCore.h"
 
@@ -28,4 +29,4 @@ public:
 };
 
 
-#endif // !_FILTER_BRIGHTNESS_H_
+#endif // !_FILTER_CONTRAST_H_

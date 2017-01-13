@@ -20,15 +20,15 @@ enum UTL_FileFilter{
 	utlFilter_ERROR
 };
 
-bool getFolderPathDlg(HWND hwnd, LPSTR folderPath, LPCSTR title);
-bool saveFolderPathDlg(HWND hwnd, LPSTR folderPath, LPCSTR title);
-int readMultiFileNameDlg(HWND hwnd, char* filenames, const char* title, UTL_FileFilter filter);
-int readMultiFileNameDlg(HWND hwnd, char* filenames, const char* title, const char* filter = NULL);
+// bool getFolderPathDlg(HWND hwnd, LPSTR folderPath, LPCSTR title);
+// bool saveFolderPathDlg(HWND hwnd, LPSTR folderPath, LPCSTR title);
+// int readMultiFileNameDlg(HWND hwnd, char* filenames, const char* title, UTL_FileFilter filter);
+// int readMultiFileNameDlg(HWND hwnd, char* filenames, const char* title, const char* filter = NULL);
 bool readFileNameDlg(HWND hwnd, LPSTR filename, LPCSTR title, UTL_FileFilter filter);
 bool readFileNameDlg(HWND hwnd, LPSTR filename, LPCSTR title, LPCSTR filter = NULL);
-bool saveFileNameDlg(HWND hwnd, LPSTR filename, LPCSTR title, UTL_FileFilter filter);
-bool saveFileNameDlg(HWND hwnd, LPSTR filename, LPCSTR title, LPCSTR filter = NULL);
-bool extractResource(LPCSTR strDstFile, LPCSTR strResType, LPCSTR strResName);
-CImage* genCImageFromResource(UINT nResID, LPCTSTR lpTyp);
+// bool saveFileNameDlg(HWND hwnd, LPSTR filename, LPCSTR title, UTL_FileFilter filter);
+// bool saveFileNameDlg(HWND hwnd, LPSTR filename, LPCSTR title, LPCSTR filter = NULL);
+// bool extractResource(LPCSTR strDstFile, LPCSTR strResType, LPCSTR strResName);
+// CImage* genCImageFromResource(UINT nResID, LPCTSTR lpTyp);
 
 #endif

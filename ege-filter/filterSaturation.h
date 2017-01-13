@@ -6,7 +6,8 @@
 *        Blog: wysaid.org
 */
 
-#ifndef _FILTER_CONTRAST_H_
+#ifndef _FILTER_SATURATION_H_
+#define _FILTER_SATURATION_H_
 
 #include "filterCore.h"
 
@@ -20,7 +21,7 @@ public:
 		float revIntensity = 1.0f - intensity;
 		_FILTER_RUN(dataOut, dataIn, w, h, stride, _FILTER_CODE(
 		{
-			float central = (MAX(MAX(out[Channel_R], out[Channel_G]), out[Channel_B]) + MIN(MIN(out[Channel_R], out[Channel_G]), out[Channel_B])) / 2.0f;
+			float central = (in[Channel_R] + in[Channel_G] + in[Channel_B]) / 3.0f;
 			out[Channel_R] = CLAMP(in[Channel_R] * intensity + revIntensity * central, 0.0f, 255.0f);
 			out[Channel_G] = CLAMP(in[Channel_G] * intensity + revIntensity * central, 0.0f, 255.0f);
 			out[Channel_B] = CLAMP(in[Channel_B] * intensity + revIntensity * central, 0.0f, 255.0f);
@@ -30,4 +31,4 @@ public:
 };
 
 
-#endif // !_FILTER_BRIGHTNESS_H_
+#endif // !_FILTER_SATURATION_H_

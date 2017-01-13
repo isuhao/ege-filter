@@ -7,6 +7,7 @@
 */
 
 #ifndef _FILTER_BRIGHTNESS_H_
+#define _FILTER_BRIGHTNESS_H_
 
 #include "filterCore.h"
 

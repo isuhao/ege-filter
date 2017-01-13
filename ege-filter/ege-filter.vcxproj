@@ -155,6 +155,7 @@
     <ClInclude Include="filterContrast.h" />
     <ClInclude Include="filterCore.h" />
     <ClInclude Include="filterSaturation.h" />
+    <ClInclude Include="filterThreshold.h" />
     <ClInclude Include="utilityWin32.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

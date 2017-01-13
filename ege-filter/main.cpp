@@ -15,15 +15,81 @@
 #include "filterBrightness.h"
 #include "filterContrast.h"
 #include "filterSaturation.h"
+#include "filterThreshold.h"
+
 #include "utilityWin32.h"
 
 #define SCR_WIDTH 800
 #define SCR_HEIGHT 600
 
+class Slider
+{
+public:
+	Slider(int x, int y, int w, int h) : m_x(x), m_y(y), m_width(w), m_height(h), m_right(x + w), m_bottom(y + h), m_posY((m_y + m_bottom) / 2), m_value(0.0f) {}
+
+	void render()
+	{
+		setfillcolor(BLUE);
+		bar(m_x, m_y, m_right, m_bottom);
+		setcolor(YELLOW);
+		line(m_x, m_posY, m_right, m_posY);
+		setfillcolor(WHITE);
+		fillellipse(m_x + 10 + (m_width - 20) * m_value, m_posY, 10, 10);
+	}
+
+	inline bool containsPos(int x, int y)
+	{
+		return (x >= m_x && x <= m_right && y >= m_y && y <= m_bottom);
+	}
+
+	inline float value() { return m_value; }
+	inline float convertToValue(float posx)
+	{
+		float v = (posx - m_x - 10) / (float)(m_width - 20);
+		return CLAMP(v, 0.0f, 1.0f);
+	}
+
+	inline void setValue(float value)
+	{
+		if (value < 0.0f)
+			value = 0.0f;
+		else if (value > 1.0f)
+			value = 1.0f;
+
+		m_value = value;
+	}
+	
+	inline bool isFirstResponder() { return m_isFirstResponder; }
+	inline void setFirstResponder(bool resp) { m_isFirstResponder = resp; }
+
+protected:
+	int m_x, m_y, m_width, m_height, m_right, m_bottom;
+	int m_posY;
+	float m_value;
+	bool m_isFirstResponder;
+};
+
+enum FilterType
+{
+	FilterType_Brightness,
+	FilterType_Contrast,
+	FilterType_Saturation,
+	FilterType_Threshold,
+	FilterType_MaxNum,
+};
+
+const char* const s_filterNames[] = {
+	"brightness(亮度)",
+	"contrast(对比度)",
+	"saturation(饱和度)",
+	"Threshold(阈值分割)", //极简实现
+	"",
+};
+
 class Scene
 {
 public:
-	Scene() : m_originImage(nullptr), m_intensity(0.0f), m_isMoving(false), m_isAdjusting(false), m_filteredImage(nullptr), m_currentType(FilterType_Brightness)
+	Scene() : m_originImage(nullptr), m_intensity(0.0f), m_isMoving(false), m_isAdjusting(false), m_filteredImage(nullptr), m_currentType(FilterType_Brightness), m_slider(410, 10, 300, 30)
 	{
 	}
 
@@ -34,15 +100,6 @@ public:
 		if (m_filteredImage != nullptr)
 			delimage(m_filteredImage);
 	}
-
-	enum FilterType
-	{
-		FilterType_Brightness,
-		FilterType_Contrast,
-		FilterType_Saturation,
-		FilterType_Level,
-		FilterType_MaxNum,
-	};
 
 	bool handleKeys()
 	{
@@ -129,19 +186,33 @@ public:
 			switch (msg.msg)
 			{
 			case mouse_msg_up:
+				m_slider.setFirstResponder(false);
 				m_isMoving = false;
 				m_isAdjusting = false;
 				break;
 			case mouse_msg_down:
+
 				if (msg.is_left())
-					m_isMoving = true;
-				else if(msg.is_right())
+				{
+					if (m_slider.containsPos(msg.x, msg.y))
+					{
+						m_slider.setFirstResponder(true);
+					}
+					else
+					{
+						m_isMoving = true;
+					}
+				}
+				else if (msg.is_right())
+				{
 					m_isAdjusting = true;
+				}
 
 				m_lastX = msg.x;
 				m_lastY = msg.y;
 				break;
 			case mouse_msg_move:
+
 				if (m_isMoving)
 				{
 					m_x += msg.x - m_lastX;
@@ -149,12 +220,22 @@ public:
 					m_lastX = msg.x;
 					m_lastY = msg.y;
 				}
-				else if (m_isAdjusting)
+				else if (m_isAdjusting || m_slider.isFirstResponder())
 				{
-					m_intensity += (msg.y - m_lastY) / (float)SCR_HEIGHT;
-					m_intensity += (msg.x - m_lastX) / (float)SCR_WIDTH;
-					m_lastX = msg.x;
-					m_lastY = msg.y;
+					if (m_isAdjusting)
+					{
+						m_intensity += (msg.y - m_lastY) / (float)SCR_HEIGHT;
+						m_intensity += (msg.x - m_lastX) / (float)SCR_WIDTH;
+						m_lastX = msg.x;
+						m_lastY = msg.y;
+						m_intensity = CLAMP(m_intensity, 0.0f, 1.0f);
+					}
+					else
+					{
+						m_intensity = m_slider.convertToValue(msg.x);
+						m_slider.setValue(m_intensity);
+					}
+					
 					runFilter();
 					printf("当前滤镜强度: %g\n", m_intensity);
 				}
@@ -185,13 +266,21 @@ public:
 	void render()
 	{
 		cleardevice(0);
+		static int hue = 0;
 		if (m_filteredImage != nullptr)
 		{
-//			putimage(m_x, m_y, m_pimg);
+			++hue;
+			hue %= 360;
+			setcolor(hsv2rgb(hue, 1.0f, 1.0f));
 			putimage(m_x, m_y, m_imageWidth * m_scaling, m_imageHeight * m_scaling, m_filteredImage, 0, 0, m_imageWidth, m_imageHeight);
-			outtextrect(10, 10, 600, 100, "按空格键重新选择图片!\n"
-				"使用鼠标左键拖拽图片， 鼠标滚轮放大或缩小图片.\n"
-				"使用鼠标右键上下左右拖动调整滤镜强度");
+			outtextrect(10, 10, 400, 100, "按空格键重新选择图片!\n"
+				"使用鼠标左键可以拖拽图片， 鼠标滚轮放大或缩小图片.\n"
+				"使用鼠标左键拖动右侧滚动条调节滤镜强度.\n"
+				"使用鼠标右键上下左右拖动界面调整滤镜强度.\n"
+				"使用数字键0-9切换滤镜效果");
+
+			outtextxy(300, 300, s_filterNames[m_currentType]);
+			m_slider.render();
 		}
 		else
 		{
@@ -207,21 +296,23 @@ public:
 		color_t* srcBuffer = getbuffer(m_originImage);
 		color_t* dstBuffer = getbuffer(m_filteredImage);
 		int stride = m_imageWidth * 4;
+		float intensity;
 		switch (m_currentType)
 		{
 		case FilterType_Brightness:
-			m_intensity = CLAMP(m_intensity, -1.0f, 1.0f);
-			FilterBrightness<FilterCoreChannelType_BGRA>::run(dstBuffer, srcBuffer, m_imageWidth, m_imageHeight, stride, m_intensity);
+			intensity = m_intensity * 2.0f - 1.0f;
+			FilterBrightness<FilterCoreChannelType_BGRA>::run(dstBuffer, srcBuffer, m_imageWidth, m_imageHeight, stride, intensity);
 			break;
 		case FilterType_Contrast:
-			m_intensity = CLAMP(m_intensity, -2.0f, 3.0f);
-			FilterContrast<FilterCoreChannelType_BGRA>::run(dstBuffer, srcBuffer, m_imageWidth, m_imageHeight, stride, m_intensity);
+			intensity = m_intensity * 5.0f - 2.0f;
+			FilterContrast<FilterCoreChannelType_BGRA>::run(dstBuffer, srcBuffer, m_imageWidth, m_imageHeight, stride, intensity);
 			break;
 		case FilterType_Saturation:
-			m_intensity = CLAMP(m_intensity, 0.0f, 3.0f);
-			FilterSaturation<FilterCoreChannelType_BGRA>::run(dstBuffer, srcBuffer, m_imageWidth, m_imageHeight, stride, m_intensity);
+			intensity = m_intensity * 4.5f;
+			FilterSaturation<FilterCoreChannelType_BGRA>::run(dstBuffer, srcBuffer, m_imageWidth, m_imageHeight, stride, intensity);
 			break;
-		case FilterType_Level:
+		case FilterType_Threshold:
+			FilterThreshold<FilterCoreChannelType_BGRA>::run(dstBuffer, srcBuffer, m_imageWidth, m_imageHeight, stride, m_intensity);
 			break;
 		default:
 			break;
@@ -238,12 +329,14 @@ protected:
 	bool m_isMoving, m_isAdjusting;
 
 	FilterType m_currentType;
+
+	Slider m_slider;
 };
 
 int main()
 {
 	initgraph(SCR_WIDTH, SCR_HEIGHT, INIT_RENDERMANUAL);
-	setbkcolor(RED);
+	setbkmode(TRANSPARENT);
 	setcolor(YELLOW);
 
 	Scene scene;

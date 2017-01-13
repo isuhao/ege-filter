@@ -36,5 +36,8 @@
     <ClInclude Include="filterSaturation.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="filterThreshold.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
