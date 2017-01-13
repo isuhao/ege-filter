@@ -39,5 +39,11 @@
     <ClInclude Include="filterThreshold.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="filterEdge.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="filterHue.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

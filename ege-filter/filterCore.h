@@ -9,6 +9,8 @@
 #ifndef _FILTER_CORE_H_
 #define _FILTER_CORE_H_
 
+#include <cmath>
+
 enum FilterCoreChannelType
 {
 	FilterCoreChannelType_Luminance = 0, //ÔÝ²»Ö§³Ö

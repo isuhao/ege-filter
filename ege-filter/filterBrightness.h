@@ -19,7 +19,7 @@ public:
 
 	static inline void run(void* dataOut, const void* dataIn, int width, int height, int stride, float intensity)
 	{
-		int plusValue = intensity * 128;
+		const int plusValue = intensity * 128;
 		_FILTER_RUN(dataOut, dataIn, w, h, stride, _FILTER_CODE(
 		{
 			out[Channel_R] = CLAMP(in[Channel_R] + plusValue, 0, 255);

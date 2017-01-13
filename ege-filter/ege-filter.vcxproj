@@ -154,6 +154,8 @@
     <ClInclude Include="filterBrightness.h" />
     <ClInclude Include="filterContrast.h" />
     <ClInclude Include="filterCore.h" />
+    <ClInclude Include="filterEdge.h" />
+    <ClInclude Include="filterHue.h" />
     <ClInclude Include="filterSaturation.h" />
     <ClInclude Include="filterThreshold.h" />
     <ClInclude Include="utilityWin32.h" />

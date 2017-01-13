@@ -16,6 +16,8 @@
 #include "filterContrast.h"
 #include "filterSaturation.h"
 #include "filterThreshold.h"
+#include "filterHue.h"
+#include "filterEdge.h"
 
 #include "utilityWin32.h"
 
@@ -75,6 +77,8 @@ enum FilterType
 	FilterType_Contrast,
 	FilterType_Saturation,
 	FilterType_Threshold,
+	FilterType_Hue,
+	FilterType_Edge,
 	FilterType_MaxNum,
 };
 
@@ -83,6 +87,8 @@ const char* const s_filterNames[] = {
 	"contrast(对比度)",
 	"saturation(饱和度)",
 	"Threshold(阈值分割)", //极简实现
+	"Hue(色相)",
+	"Edge(查找边缘)",
 	"",
 };
 
@@ -159,7 +165,7 @@ public:
 				int type = c - '0';
 				if (type >= 0 && type < FilterType_MaxNum)
 				{
-					m_intensity = 1.0f;
+//					m_intensity = 1.0f;
 					m_currentType = (FilterType)type;
 					runFilter();
 				}
@@ -233,9 +239,9 @@ public:
 					else
 					{
 						m_intensity = m_slider.convertToValue(msg.x);
-						m_slider.setValue(m_intensity);
 					}
-					
+
+					m_slider.setValue(m_intensity);
 					runFilter();
 					printf("当前滤镜强度: %g\n", m_intensity);
 				}
@@ -314,6 +320,13 @@ public:
 		case FilterType_Threshold:
 			FilterThreshold<FilterCoreChannelType_BGRA>::run(dstBuffer, srcBuffer, m_imageWidth, m_imageHeight, stride, m_intensity);
 			break;
+		case FilterType_Hue:
+			intensity = m_intensity * (3.14159f * 2.0f);
+			FilterHue<FilterCoreChannelType_BGRA>::run(dstBuffer, srcBuffer, m_imageWidth, m_imageHeight, stride, intensity);
+			break;
+		case FilterType_Edge:
+			cleardevice(m_filteredImage);
+			FilterEdge<FilterCoreChannelType_BGRA>::run(dstBuffer, srcBuffer, m_imageWidth, m_imageHeight, stride, m_intensity);
 		default:
 			break;
 		}
