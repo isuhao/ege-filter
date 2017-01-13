@@ -3,3 +3,10 @@
 
 # 截图
 
+![https://raw.githubusercontent.com/wysaid/ege-filter/master/screenshots/1.jpg](https://raw.githubusercontent.com/wysaid/ege-filter/master/screenshots/1.jpg)
+
+![https://raw.githubusercontent.com/wysaid/ege-filter/master/screenshots/2.png](https://raw.githubusercontent.com/wysaid/ege-filter/master/screenshots/2.png)
+
+![https://raw.githubusercontent.com/wysaid/ege-filter/master/screenshots/3.jpg](https://raw.githubusercontent.com/wysaid/ege-filter/master/screenshots/3.jpg)
+
+![https://raw.githubusercontent.com/wysaid/ege-filter/master/screenshots/4.jpg](https://raw.githubusercontent.com/wysaid/ege-filter/master/screenshots/4.jpg)
